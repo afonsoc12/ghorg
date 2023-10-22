@@ -35,7 +35,7 @@ jobs:
         run: |
           echo "github.ref_name=${{ github.ref_name }}"
           echo "github.sha=${{ github.sha }}"
-          ref_name=$(echo "${{ github.ref_name }}" | tr -c 'a-zA-Z0-9' '-' | sed 's/^-//;s/-$//')
+          ref_name=$(echo "${{ github.ref_name }}" | tr -c 'a-zA-Z0-9.' '-' | sed 's/^-//;s/-$//')
           commit_sha=$(git rev-parse --short HEAD)
           echo "ref_name=$ref_name"
           echo "commit_sha=$commit_sha"
