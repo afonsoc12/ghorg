@@ -35,38 +35,12 @@ jobs:
   #         GITHUB_TOKEN: ${{ secrets.GHORG_GITHUB_TOKEN }}
 
   docker:
-    # needs: inputs
-    name: Build and deploy to GitHub Container Registry
-    # if: needs.inputs.outputs.version
-    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      # - name: Login to DockerHub
-      #   uses: docker/login-action@v2
-      #   with:
-      #     registry: docker.io
-      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
-      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Generate short commit GITHUB_SHA::7
         run: echo "commit_sha=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-      - name: Build and push
-        uses: docker/build-push-action@v3
+      - name: Run reusable docker workflow
+        uses: ./.github/workflows/docker.yml@HEAD
         with:
-          # context: ./ghorg
-          # file: Dockerfile
-          platforms: linux/arm,linux/arm64,linux/amd64
-          push: true
-          tags: |
-            ghcr.io/${{ github.repository }}:dev-latest
-            ghcr.io/${{ github.repository }}:dev-${{ env.commit_sha }}
+          docker_latest_tag: dev-latest
+          docker_tag: dev-${{ env.commit_sha }}
+
