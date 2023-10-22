@@ -36,6 +36,8 @@ jobs:
 
   docker-latest:
       uses: ./.github/workflows/docker.yml
+      permissions:
+        packages: write
       with:
         docker_latest_tag: dev-latest
         docker_tag: dev-123
