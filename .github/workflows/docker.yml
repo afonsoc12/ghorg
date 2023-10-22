@@ -7,22 +7,22 @@ on:
     #  - ghcr.io/gabrie30/ghorg:dev-run-<GITHUB_RUN_NUMBER>
     inputs:
       docker_latest_tag:
-        required: false
+        required: true
         type: string
         default: dev-latest
       docker_tag:
-        required: false
+        required: true
         type: string
-        default: dev-run-${{ GITHUB_RUN_NUMBER }}
+        # default: dev-run-${{ GITHUB_RUN_NUMBER }}
   workflow_call:
     # If triggered from another WF, by default, docker tags will be
     #  - ghcr.io/gabrie30/ghorg:dev-latest
     #  - ghcr.io/gabrie30/ghorg:dev-<GITHUB_REF_NAME>
     inputs:
       docker_latest_tag:
-        required: true
+        required: false
         type: string
-        default: latest
+        default: dev-latest
       docker_tag:
         required: true
         type: string
