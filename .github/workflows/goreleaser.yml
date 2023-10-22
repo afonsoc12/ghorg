@@ -35,7 +35,7 @@ jobs:
   #         GITHUB_TOKEN: ${{ secrets.GHORG_GITHUB_TOKEN }}
 
   docker-latest:
-      uses: ./.github/workflows/docker.yml@${{ GITHUB_SHA }}
+      uses: ./.github/workflows/docker.yml
       with:
         docker_latest_tag: dev-latest
         docker_tag: dev-${{ GITHUB_SHA }}
