@@ -66,5 +66,5 @@ jobs:
           platforms: linux/arm,linux/arm64,linux/amd64
           push: true
           tags: |
-            ghcr.io/afonsoc12/${{ github.repository }}:latest
-            ghcr.io/afonsoc12/${{ github.repository }}:dev-${GITHUB_SHA::7}
+            ghcr.io/${{ github.repository }}:dev-latest
+            ghcr.io/${{ github.repository }}:dev-${GITHUB_SHA::7}
