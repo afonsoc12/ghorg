@@ -34,13 +34,13 @@ jobs:
   #       env:
   #         GITHUB_TOKEN: ${{ secrets.GHORG_GITHUB_TOKEN }}
 
-  docker:
+  docker-latest:
     runs-on: ubuntu-latest
     steps:
-      - name: Generate short commit GITHUB_SHA::7
-        run: echo "commit_sha=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      - name: Generate short commit SHA
+        run: echo "commit_sha=${GITHUB_SHA::7}" >> $GITHUB_ENV
       - name: Run reusable docker workflow
-        uses: ./.github/workflows/docker.yml@HEAD
+        uses: ./.github/workflows/docker.yml@{GITHUB_SHA}
         with:
           docker_latest_tag: dev-latest
           docker_tag: dev-${{ env.commit_sha }}
