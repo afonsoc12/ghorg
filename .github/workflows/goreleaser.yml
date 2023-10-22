@@ -35,6 +35,7 @@ jobs:
   #         GITHUB_TOKEN: ${{ secrets.GHORG_GITHUB_TOKEN }}
 
   docker:
+    runs-on: ubuntu-latest
     steps:
       - name: Generate short commit GITHUB_SHA::7
         run: echo "commit_sha=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
