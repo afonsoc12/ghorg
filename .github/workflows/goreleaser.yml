@@ -58,6 +58,8 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate short commit GITHUB_SHA::7
+        run: echo "commit_sha=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
@@ -67,4 +69,4 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository }}:dev-latest
-            ghcr.io/${{ github.repository }}:dev-${GITHUB_SHA::7}
+            ghcr.io/${{ github.repository }}:dev-${{ env.commit_sha }}
