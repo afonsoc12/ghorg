@@ -2,34 +2,19 @@ name: docker
 
 on:
   workflow_dispatch:
-    # If triggered from UI, by default, docker tags will be
-    #  - ghcr.io/gabrie30/ghorg:dev-latest
-    #  - ghcr.io/gabrie30/ghorg:dev-run-<GITHUB_RUN_NUMBER>
     inputs:
-      docker_latest_tag:
-        required: true
-        type: string
-        default: dev-latest
-      docker_tag:
-        required: true
-        type: string
-        # default: dev-run-${{ GITHUB_RUN_NUMBER }}
-  workflow_call:
-    # If triggered from another WF, by default, docker tags will be
-    #  - ghcr.io/gabrie30/ghorg:dev-latest
-    #  - ghcr.io/gabrie30/ghorg:dev-<GITHUB_REF_NAME>
-    inputs:
-      docker_latest_tag:
+      is_release:
         required: false
-        type: string
-        default: dev-latest
-      docker_tag:
-        required: true
-        type: string
+        default: false
+  workflow_call:
+    inputs:
+      is_release:
+        required: false
+        default: false
 
 jobs:
   docker:
-    name: Build and deploy to GitHub Container Registry
+    name: Build and deploy to ghcr.io
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -44,10 +29,29 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Compute Docker tags
+        run: |
+          echo "GITHUB_REF_NAME=${{ GITHUB_REF_NAME }}"
+          echo "GITHUB_REF_NAME=${{ GITHUB_SHA }}"
+          commit_sha=$(git rev-parse --short HEAD)
+          echo "commit_sha=$commit_sha"
+
+          if [ "${{ inputs.is_release }}" = "true" ]; then
+            echo "Setting Docker tag for a release"
+            echo "docker_latest_tag=latest" >> $GITHUB_ENV
+            echo "docker_latest_tag=${{ GITHUB_REF_NAME }}" >> $GITHUB_ENV
+          else
+            echo "Setting Docker tag for a regular push"
+            echo "docker_latest_tag=ref-${{ GITHUB_REF_NAME }}" >> $GITHUB_ENV
+            echo "docker_latest_tag=ref-${{ GITHUB_REF_NAME }}-$commit_sha" >> $GITHUB_ENV
+          fi
+          echo "Tag docker_latest_tag=${{ env.docker_latest_tag }}"
+          echo "Tag docker_tag=${{ env.docker_tag }}"
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          platforms: linux/arm64,linux/amd64
+          # platforms: linux/arm64,linux/amd64
+          platforms: linux/amd64
           push: true
           tags: |
             ghcr.io/${{ github.repository }}:${{ inputs.docker_latest_tag }}

@@ -39,6 +39,5 @@ jobs:
       permissions:
         packages: write
       with:
-        docker_latest_tag: dev-latest
-        docker_tag: dev-123
+        is_release: false
 
