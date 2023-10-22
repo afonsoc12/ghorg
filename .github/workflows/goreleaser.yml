@@ -39,6 +39,10 @@ jobs:
     steps:
       - name: Generate short commit SHA
         run: echo "commit_sha=${GITHUB_SHA::7}" >> $GITHUB_ENV
+      - name: pwd
+        run: |
+          pwd
+          ls -alh
       - name: Run reusable docker workflow
         uses: ./.github/workflows/docker.yml@{GITHUB_SHA}
         with:
