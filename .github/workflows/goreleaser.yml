@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - 'v*'
+    branches:
+      - 351/automated_docker_images
   workflow_dispatch:
 
 permissions:
